@@ -61,6 +61,7 @@ int main(int argc, char** argv)
 	{
 		FILE* sourceFile = NULL;
 		BFmem mem;
+		int brackets = 0;
 		if((mem.memory = (char*) calloc(30000,sizeof(char))) == NULL) /* Brainfuck memory */
 		{
 			printf("Unable to allocate enough memory for BrainFuck memory...aborting\n");
@@ -83,6 +84,20 @@ int main(int argc, char** argv)
 		}
 		fread(mem.program, mem.size, 1, sourceFile);
 		fclose(sourceFile);
+		while(mem.instructionPointer < mem.size)
+		{
+			if(mem.program[mem.instructionPointer] == '[')
+				brackets++;
+			else if(mem.program[mem.instructionPointer] == ']')
+				brackets--;
+			mem.instructionPointer++;
+		}
+		mem.instructionPointer = 0;
+		if(brackets != 0)
+		{
+			printf("Unmatching bracket(s) found...aborting");
+			return EXIT_SUCCESS;
+		}
 		parseBF(mem); /* Parsing */
 	}
 	return EXIT_SUCCESS;
@@ -125,7 +140,7 @@ BFmem parseBF(BFmem mem)
 						{
 							bracketCount++;
 						}
-						if(mem.program[mem.instructionPointer] == ']')
+						else if(mem.program[mem.instructionPointer] == ']')
 						{
 							bracketCount--;
 						}
@@ -144,7 +159,7 @@ BFmem parseBF(BFmem mem)
 						{
 							bracketCount++;
 						}
-						if(mem.program[mem.instructionPointer] == '[')
+						else if(mem.program[mem.instructionPointer] == '[')
 						{
 							bracketCount--;
 						}
