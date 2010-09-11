@@ -61,7 +61,11 @@ int main(int argc, char** argv)
 	{
 		FILE* sourceFile = NULL;
 		BFmem mem;
-		mem.memory = (char*) calloc(30000,sizeof(char)); /* Brainfuck memory */
+		if((mem.memory = (char*) calloc(30000,sizeof(char))) == NULL) /* Brainfuck memory */
+		{
+			printf("Unable to allocate enough memory for BrainFuck memory...aborting\n");
+			return EXIT_FAILURE;
+		}
 		mem.ptr = mem.memory;/* Initially, the pointer points to the leftmost memory value */
 		mem.instructionPointer = 0;
 		if((sourceFile = fopen(argv[1],"r")) == NULL) /* Openning file */
@@ -72,9 +76,9 @@ int main(int argc, char** argv)
 		fseek(sourceFile, 0, SEEK_END);
 		mem.size = ftell(sourceFile);
 		fseek(sourceFile, 0, SEEK_SET);
-		if((mem.program = malloc(mem.size)) == NULL)
+		if((mem.program = (char*) malloc(mem.size)) == NULL)
 		{
-			printf("Unable to allocate enough memory for source code…aborting\n");
+			printf("Unable to allocate enough memory for source code...aborting\n");
 			return EXIT_FAILURE;
 		}
 		fread(mem.program, mem.size, 1, sourceFile);
