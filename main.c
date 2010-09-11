@@ -77,7 +77,11 @@ int main(int argc, char** argv)
 		fseek(sourceFile, 0, SEEK_END);
 		mem.size = ftell(sourceFile);
 		fseek(sourceFile, 0, SEEK_SET);
-		mem.program = malloc(mem.size);
+		if((mem.program = malloc(mem.size)) == NULL)
+		{
+			printf("Unable to allocate enough memory for source code…aborting\n");
+			return EXIT_FAILURE;
+		}
 		fread(mem.program, mem.size, 1, sourceFile);
 		fclose(sourceFile);
 		parseBF(mem); /* Parsing */
