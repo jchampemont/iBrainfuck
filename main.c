@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define CHUNK 1024
 
 typedef struct {
 	char *ptr; /* Brainfuck pointer */
@@ -95,7 +94,7 @@ int main(int argc, char** argv)
 		mem.instructionPointer = 0;
 		if(brackets != 0)
 		{
-			printf("Unmatching bracket(s) found...aborting");
+			printf("Unmatching bracket(s) found…aborting\n");
 			return EXIT_SUCCESS;
 		}
 		parseBF(mem); /* Parsing */
@@ -114,9 +113,19 @@ BFmem parseBF(BFmem mem)
 		{
 			case '>':
 				mem.ptr++;
+				if(mem.ptr > mem.memory + 30000)
+				{
+					printf("Memory pointer out of bound...aborting\n");
+					return mem;
+				}
 				break;
 			case '<':
 				mem.ptr--;
+				if(mem.ptr < mem.memory)
+				{
+					printf("Memory pointer out of bound...aborting\n");
+					return mem;
+				}
 				break;
 			case '+':
 				*(mem.ptr) = *(mem.ptr) + 1;
