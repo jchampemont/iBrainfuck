@@ -68,9 +68,14 @@ int main(int argc, char** argv)
 	}
 	else
 	{
+		int i;
 		FILE* sourceFile = NULL;
 		BFmem mem;
-		mem.memory = (char*) calloc(30000,sizeof(char)); /* Brainfuck memory */
+		mem.memory = (char*) malloc(30000,sizeof(char)); /* Brainfuck memory */
+		for(i=0;i<30000;i++)
+		{
+			mem.memory[i] = 0;
+		}
 		mem.ptr = mem.memory;/* Initially, the pointer points to the leftmost memory value */
 		mem.instructionPointer = 0;
 		if((sourceFile = fopen(argv[1],"r")) == NULL) /* Openning file */
