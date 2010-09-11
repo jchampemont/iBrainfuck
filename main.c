@@ -46,15 +46,6 @@ BFmem parseBF(BFmem mem);
  *
  */
 
-int read_file(FILE *fp, char **buf);
-/* 
- * Read the contents of a file into a buffer.  Return the size of the file 
- * and set buf to point to a buffer allocated with malloc that contains  
- * the file contents.
- *
- */
-
-
 int main(int argc, char** argv)
 {
 	if(argc == 1 || argc > 2) /* Only accept 1 argument : filename or -v for version information. */
@@ -83,7 +74,12 @@ int main(int argc, char** argv)
 			printf("Unable to open file...aborting\n");
 			return EXIT_FAILURE;
 		}
-		mem.size = read_file(sourceFile, &(mem.program));
+		fseek(sourceFile, 0, SEEK_END);
+		mem.size = ftell(sourceFile);
+		fseek(sourceFile, 0, SEEK_SET);
+		mem.program = malloc(mem.size);
+		fread(mem.program, mem.size, 1, sourceFile);
+		fclose(sourceFile);
 		parseBF(mem); /* Parsing */
 	}
 	return EXIT_SUCCESS;
@@ -157,27 +153,4 @@ BFmem parseBF(BFmem mem)
 		}
 	}
 	return mem;
-}
-
-int read_file(FILE *fp, char **buf) 
-{
-	int n, np, r;
-	char *b, *b2;
-	n = 0;
-	np = CHUNK;
-	b = malloc(sizeof(char)*n);
-	while ((r = fread(b, sizeof(char), CHUNK, fp)) > 0)
-	{
-		n += r;
-		if (np - n < CHUNK)
-		{
-			np *= 2;                      /* buffer is too small, the next read could overflow! */
-			b2 = malloc(np*sizeof(char));
-			memcpy(b2, b, n * sizeof(char));
-			free(b);
-			b = b2;
-		}
-	}
-	*buf = b;
-	return n;
 }
