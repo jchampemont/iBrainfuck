@@ -71,7 +71,7 @@ int main(int argc, char** argv)
 		int i;
 		FILE* sourceFile = NULL;
 		BFmem mem;
-		mem.memory = (char*) malloc(30000,sizeof(char)); /* Brainfuck memory */
+		mem.memory = (char*) malloc(30000*sizeof(char)); /* Brainfuck memory */
 		for(i=0;i<30000;i++)
 		{
 			mem.memory[i] = 0;
