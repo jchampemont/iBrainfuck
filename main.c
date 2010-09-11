@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 	}
 	if(strcmp(argv[1],"-v") == 0)
 	{
-		printf("ibrainfuck version 1.0b1\n");
+		printf("ibrainfuck version 1.0b2\n");
 	}
 	else
 	{
